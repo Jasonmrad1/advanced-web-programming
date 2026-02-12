@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text File Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background: #000000;
+    min-height: 100vh;
+    padding: 0;
+}
+
+nav {
+    background: #1a1a1a;
+    border-bottom: 1px solid #2a2a2a;
+    padding: 20px 0;
+    margin-bottom: 40px;
+}
+
+.nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-title {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.nav-subtitle {
+    color: #808080;
+    font-size: 0.9rem;
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+.nav-badge {
+    background: blueviolet;
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    border-color: blueviolet;
+    box-shadow: 0 8px 24px rgba(138, 43, 226, 0.25);
+    transform: translateY(-4px);
+}
+
+.card h3 {
+    color: blueviolet;
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+label {
+    display: block;
+    color: #b3b3b3;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 8px;
+    margin-top: 16px;
+}
+
+label:first-of-type {
+    margin-top: 0;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: #000000;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Outfit', sans-serif;
+    color: #e6e6e6;
+    transition: all 0.2s ease;
+}
+
+input[type="text"]::placeholder, textarea::placeholder {
+    color: #666666;
+}
+
+input[type="text"]:focus, textarea:focus {
+    outline: none;
+    border-color: blueviolet;
+    background: #0a0a0a;
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.5;
+}
+
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 13px 20px;
+    background: blueviolet;
+    color: #ffffff;
+    border: none;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: rgb(129, 25, 226);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.card p {
+    color: #808080;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    nav {
+        padding: 16px 0;
+        margin-bottom: 30px;
+    }
+
+    .nav-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .nav-title {
+        font-size: 1.3rem;
+    }
+    
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .card {
+        padding: 24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="nav-content">
+        <div>
+            <div class="nav-title">Text File Manager</div>
+            <div class="nav-subtitle">Manage your text files with ease</div>
+        </div>
+        <div class="nav-badge">Storage API</div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="grid">
+        <div class="card">
+            <h3>Create New File</h3>
+            <form action="/textfile-api/new" method="GET">
+                <label for="create-filename">Filename</label>
+                <input type="text" id="create-filename" name="filename" placeholder="myfile.txt" required>
+
+                <label for="create-data">Content</label>
+                <textarea id="create-data" name="data" placeholder="Enter file content..."></textarea>
+
+                <button type="submit">Create File</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Read File</h3>
+            <form action="/textfile-api/read" method="GET">
+                <label for="read-filename">Filename</label>
+                <input type="text" id="read-filename" name="filename" placeholder="myfile.txt" required>
+
+                <button type="submit">Read File</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Delete File</h3>
+            <form action="/textfile-api/remove" method="GET">
+                <label for="delete-filename">Filename</label>
+                <input type="text" id="delete-filename" name="filename" placeholder="myfile.txt" required>
+
+                <button type="submit">Delete File</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Append To File</h3>
+            <form action="/textfile-api/append" method="GET">
+                <label for="append-filename">Filename</label>
+                <input type="text" id="append-filename" name="filename" placeholder="myfile.txt" required>
+
+                <label for="append-data">Content to Add</label>
+                <textarea id="append-data" name="data" placeholder="Enter content to append..."></textarea>
+
+                <button type="submit">Append Data</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>View All Files</h3>
+            <form action="/textfile-api/all" method="GET">
+                <p>See all text files in storage</p>
+                <button type="submit">Show All Files</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
