@@ -43,7 +43,7 @@ http.createServer((req, res) => {
     const pathname = url.pathname.toLowerCase();
 
     if(pathname === "/organizer"){
-        fs.readFile(path.joint(__dirname, "index.html"), "utf8", (err,data) =>{
+        fs.readFile(path.join(__dirname, "index.html"), "utf8", (err,data) =>{
             if(err){
                 if(err.code === "ENOENT"){
                     return sendNotFound(res, "Organizer page missing");
@@ -63,7 +63,7 @@ http.createServer((req, res) => {
 
     const filename =  params.get("filename");
     const data = params.get("data");
-    const filepath = filename ? path.join(STORAGE_PATH, path.basename(filename.endsWith(".txt") ? filename : filename.concat(".txt"))) : null;
+    const filepath = filename? path.join(STORAGE_PATH, path.basename(filename).split(".")[0] + ".txt") : null;
 
     if(req.method !== "GET"){
         return sendMethodNotAllowed(res, "Only GET allowed");
@@ -150,5 +150,5 @@ http.createServer((req, res) => {
             sendNotFound(res, "Route not found");        
     }
     
-}).listen(PORT, () => console.log(`Running at http://localhost:${PORT}`));
+}).listen(PORT, () => console.log(`Running at http://localhost:${PORT}/organizer`));
 
