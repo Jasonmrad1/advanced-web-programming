@@ -88,8 +88,8 @@ http.createServer((req, res) => {
             });
             break;
         case "/new":
-            if (!filename || data===null) {
-                return sendBadRequest(res, "Missing data or filename");
+            if (!filename) {
+                return sendBadRequest(res, "Missing file name");
             }
 
             fs.writeFile(filepath, data, (err) => {
@@ -135,7 +135,7 @@ http.createServer((req, res) => {
             break;
         case "/append":
 
-            if (!filename || data===null) {
+            if (!filename || !data) {
                 return sendBadRequest(res, "Missing data or filename");
             }
 
