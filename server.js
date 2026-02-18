@@ -34,6 +34,13 @@ const sendMethodNotAllowed = (res, message) => {
     res.end(`Method Not Allowed: ${message}`);
 };
 
+const getFilepath = (filename) => {
+    if (!filename) return null;
+    const basename = path.basename(filename);
+    const finalName = basename.toLowerCase().endsWith(".txt") ? basename : basename + ".txt";
+    return path.join(STORAGE_PATH, finalName);
+};
+
 if(!fs.existsSync(STORAGE_PATH)){
     fs.mkdirSync(STORAGE_PATH);
 }
@@ -59,15 +66,14 @@ http.createServer((req, res) => {
     return sendNotFound(res, "Route not found");
     }
     
-    const params = url.searchParams;     
-
-    const filename =  params.get("filename");
-    const data = params.get("data");
-    const filepath = filename? path.join(STORAGE_PATH, path.basename(filename).split(".")[0] + ".txt") : null;
-
     if(req.method !== "GET"){
         return sendMethodNotAllowed(res, "Only GET allowed");
     }
+
+    const params = url.searchParams;     
+    const filename =  params.get("filename")?.trim();
+    const data = params.get("data");
+    const filepath = getFilepath(filename);
 
     const route = pathname.slice(BASE_URL.length);
 
@@ -78,7 +84,7 @@ http.createServer((req, res) => {
                         return sendServerError(res, "Cannot list files");
                     }
                     const txtFiles = files.filter((file) => file.endsWith(".txt"));
-                    return sendOk(res, JSON.stringify(txtFiles), JSON_HEADER);
+                    sendOk(res, JSON.stringify(txtFiles), JSON_HEADER);
                 });
         break;
         case "/new":
@@ -127,7 +133,7 @@ http.createServer((req, res) => {
             });
             
             break;
-        case '/append':
+        case "/append":
 
             if(!filename || !data){
                 return sendBadRequest(res, "Missing data or filename");
