@@ -58,7 +58,7 @@ http.createServer((req, res) => {
                 return sendServerError(res, "Failed to read file");
             }
             return sendOk(res, data, HTML);
-        })
+        });
         return;
     }
 
@@ -86,6 +86,7 @@ http.createServer((req, res) => {
                 const txtFiles = files.filter((file) => file.endsWith(".txt"));
                 sendOk(res, JSON.stringify(txtFiles), JSON_HEADER);
             });
+            
             break;
         case "/new":
             if (!filename) {
@@ -102,7 +103,7 @@ http.createServer((req, res) => {
             break;
         case "/read":
             if (!filename) {
-                return sendBadRequest(res, `Missing file name`);
+                return sendBadRequest(res, "Missing file name");
             }
 
             fs.readFile(filepath, "utf8", (err, data) => {
@@ -117,9 +118,8 @@ http.createServer((req, res) => {
 
             break;
         case "/remove":
-
             if (!filename) {
-                return sendBadRequest(res, `Missing file name`);
+                return sendBadRequest(res, "Missing file name");
             }
 
             fs.unlink(filepath, (err) => {
@@ -134,23 +134,26 @@ http.createServer((req, res) => {
 
             break;
         case "/append":
-
             if (!filename || !data) {
                 return sendBadRequest(res, "Missing data or filename");
             }
 
             fs.access(filepath, (err) => {
                 if (err) {
-                    return sendNotFound(res, `File not found`);
+                    if (err.code === "ENOENT") {
+                        return sendNotFound(res, "File not found");
+                    }
+                    return sendServerError(res, "Failed to access file");
                 }
 
                 fs.appendFile(filepath, data, (err) => {
                     if (err) {
-                        return sendServerError(res, `Failed to append data to file`);
+                        return sendServerError(res, "Failed to append data to file");
                     }
-                    sendOk(res, `Successfully appended data to file`);
+                    sendOk(res, "Successfully appended data to file");
                 });
-            })
+            });
+
             break;
         default:
             sendNotFound(res, "Route not found");
