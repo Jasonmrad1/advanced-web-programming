@@ -1,6 +1,7 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const sanitize = require("sanitize-filename");
 
 const PORT = 3000;
 const BASE_URL = "/textfile-api";
@@ -36,8 +37,9 @@ const sendMethodNotAllowed = (res, message) => {
 
 const getFilepath = (filename) => {
     if (!filename) return null;
-    const basename = path.basename(filename);
-    const finalName = basename.toLowerCase().endsWith(".txt") ? basename : basename + ".txt";
+    const sanitized = sanitize(filename);
+    if (!sanitized) return null;
+    const finalName = path.parse(sanitized).name + '.txt';
     return path.join(STORAGE_PATH, finalName);
 };
 
